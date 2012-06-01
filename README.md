@@ -4,6 +4,12 @@
 
 Host an `EventEmitter` like object with an additional API in a server process, and let a client process make calls against a proxy of it - as if it all happened in the client process. The fact that an object in another process is actually used should be *completely* transparent.
 
+## What can this be used for ##
+
+An example of its use would be in an IRC bot. By exposing an identical proxy object in a client process, the server process can stay up (and connected to an IRC server) indefinitely, while a client process spawns, does some stuff and shuts back down. Whenever the client shuts down, all traces of it should be removed.
+
+The same should apply for other `EventEmitter` like scenarios, such as HTTP handler processes be plugged and removed at will, while the actual HTTP server stays up all along.
+
 ## How it works right now ##
 
 This application will proxy function calls from a client process to a server server process.
