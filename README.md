@@ -2,7 +2,7 @@
 
 ## Goal ##
 
-Have an `EventEmitter` like object with an additional API in a server process, and let a client process make calls against a proxy of it - as if it all happened in the client process. The fact that an object in another process is actually used should be *completely* transparent.
+Host an `EventEmitter` like object with an additional API in a server process, and let a client process make calls against a proxy of it - as if it all happened in the client process. The fact that an object in another process is actually used should be *completely* transparent.
 
 ## How it works right now ##
 
