@@ -1,5 +1,9 @@
 var irc = require('./irc-proxy');
-irc.join('#bitraf2', function() {
-  console.log('onjoin!');
-  irc.privmsg('#bitraf2', 'flaskepess');
+irc.join('#onug', function() {
+  irc.privmsg('#onug', 'flaskepess');
 });
+irc.on('privmsg', function(from, to, message) {
+  if (to[0] == '#') {
+    irc.privmsg(to, from + ': ok!');
+  }
+})

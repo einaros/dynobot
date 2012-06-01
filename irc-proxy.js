@@ -3,29 +3,34 @@ var IRC = require('./node_modules/irc/irc').IRC;
 var storedCallbacks = {};
 var correlationToken = 0;
 
-process.on('message', function(message) {
-  console.log('child message', message);
-  if (message.to == 'irc-proxy' && message.what == 'callback') {
-    var correlationToken = message.correlationToken;
-    var callbacks = storedCallbacks[correlationToken];
-    console.log(callbacks);
-    if (callbacks) {
-      delete storedCallbacks[correlationToken];
-      callbacks[message.callbackIndex].call(null, message.arguments);
+function proxy(sourceObject, proxyName) {
+  process.on('message', function(message) {
+    if (message.to != proxyName) return;
+    console.log('child message', message);
+    if (message.what == 'callback') {
+      var correlationToken = message.correlationToken;
+      var callbacks = storedCallbacks[correlationToken];
+      if (callbacks) {
+        callbacks[message.callbackIndex].apply(null, message.arguments);
+      }
     }
+    else if (message.what == 'release callback') {
+      var correlationToken = message.correlationToken;
+      var callbacks = storedCallbacks[correlationToken];
+      if (callbacks) {
+        callbacks.splice(message.callbackIndex, 1);
+        if (callbacks.length == 0) delete storedCallbacks[correlationToken];
+      }
+    }
+  });
+
+  function rememberCallbacksForRemoteCall(correlationToken, callbacks) {
+    storedCallbacks[correlationToken] = callbacks;
   }
-});
 
-function rememberCallbacksForRemoteCall(correlationToken, callbacks) {
-  storedCallbacks[correlationToken] = callbacks;
-}
-
-var proxy = {};
-Object.keys(IRC.prototype).forEach(function(name) {
-  if (IRC.prototype.hasOwnProperty(name)) {
-    proxy[name] = function() {
+  function hook(name, proxyObject) {
+    proxyObject[name] = function() {
       ++correlationToken;
-      console.log('%d: %s was called', correlationToken, name);
 
       var args = Array.prototype.slice.call(arguments, 0);
       var callbacks = [];
@@ -44,10 +49,15 @@ Object.keys(IRC.prototype).forEach(function(name) {
         ircCall: name,
         arguments: args,
         functionArgumentIndexes: functionArgumentIndexes,
-        correlationToken: correlationToken
+        correlationToken: correlationToken,
+        replyTo: proxyName
       });
     }
   }
-});
 
-module.exports = proxy;
+  var proxyObject = {};
+  for (var name in sourceObject) hook(name, proxyObject);
+  return proxyObject;
+}
+
+module.exports = proxy(IRC.prototype);
