@@ -1,3 +1,5 @@
+# The dynobot experiment #
+
 This application will proxy function calls from a client process to a server server process.
 
 Arguments of type `function` will be replaced with tokens, which allow the server to establish new callbacks on the server side. When these callbacks are called, the server will send a message back to the client - including the token - which enables the client to fire its intended token. Effectively, cross-process calls *and* callbacks work.
@@ -18,7 +20,11 @@ proxyObject.removeListener('foo', handler);
 
 Finally, when a client disconnects, the server will attempt to automatically remove all EventEmitter-like handlers it has attached. This is done by taking note of all calls to `on` type functions, and passing them all to `removeListener` after the client has disconnected.
 
-Todos:
+## See also ##
+
+Notes in `child.js`.
+
+## Todos ##
 
 - Track function arguments passed recursively in arguments - from both sides.
 - Write tests (rather than the current manual verification) of the relayed garbage collection info in effect.
