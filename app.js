@@ -1,5 +1,5 @@
 var cp = require('child_process');
-var IRC = require('./node_modules/irc/irc').IRC;
+var IRC = require('irc.js');
 var Service = require('./service');
 var Channel = require('./channel');
 

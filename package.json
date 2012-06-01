@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "dependencies": {
     "weak": "latest",
-    "irc": "https://github.com/einaros/node-irc/tarball/master",
+    "irc.js": "latest",
     "node-uuid": "~1.3.3"
   },
   "devDependencies": {},
