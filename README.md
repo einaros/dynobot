@@ -17,3 +17,8 @@ proxyObject.removeListener('foo', handler);
 .. and consequently have the server garbage collect its side of the `handler` callback, references to the same function is detected on the client side, and an existing callback id will be passed rather than a new one.
 
 Finally, when a client disconnects, the server will attempt to automatically remove all EventEmitter-like handlers it has attached. This is done by taking note of all calls to `on` type functions, and passing them all to `removeListener` after the client has disconnected.
+
+Todos:
+
+- Track function arguments passed recursively in arguments - from both sides.
+- Write tests (rather than the current manual verification) of the relayed garbage collection info in effect.
