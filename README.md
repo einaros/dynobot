@@ -2,7 +2,7 @@
 
 This application will proxy function calls from a client process to a server server process.
 
-Arguments of type `function` will be replaced with tokens, which allow the server to establish new callbacks on the server side. When these callbacks are called, the server will send a message back to the client - including the token - which enables the client to fire its intended token. Effectively, cross-process calls *and* callbacks work.
+Arguments of type `function` will be replaced with tokens, which allow the server to establish new callbacks on the server side. When these callbacks are called, the server will send a message back to the client - including the token - which enables the client to fire its intended callback. Effectively, cross-process calls *and* callbacks work.
 
 Furthermore, event handlers can be registered from the client on the server - these will work like the callbacks described above. There's no call count limit on these cross process callbacks.
 
