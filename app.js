@@ -15,5 +15,3 @@ irc.on('connected', function() {
     channel.close();
   });
 });
-
-setInterval(function() {gc();}, 2000);
